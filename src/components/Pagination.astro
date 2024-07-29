@@ -1,0 +1,71 @@
+---
+const { length, currentUrl, currentPage, firstUrl, prevUrl, nextUrl, lastUrl } = Astro.props;
+const paginationList = Array.from({ length }, (_, i) => i + 1);
+---
+
+<nav aria-label="Page navigation" class="pagination">
+  <ul class="inline-flex -space-x-px">
+    {currentPage > 1 ? (
+      <>
+        <li>
+          <a href={firstUrl} class="pagination__link">&laquo; First</a>
+        </li>
+        <li>
+          <a href={prevUrl} class="pagination__link">&lsaquo; Previous</a>
+        </li>
+      </>
+    ) : (
+      <>
+        <li class="disabled"><span>&laquo; First</span></li>
+        <li class="disabled"><span>&lsaquo; Previous</span></li>
+      </>
+    )}
+    {paginationList.map((pageNum) => (
+      <li key={pageNum}>
+        <a href={`${firstUrl}/${pageNum}`} class={`pagination__link ${currentPage === pageNum ? 'active' : ''}`}>{pageNum}</a>
+      </li>
+    ))}
+    {currentPage < length ? (
+      <>
+        <li>
+          <a href={nextUrl} class="pagination__link">Next &rsaquo;</a>
+        </li>
+        <li>
+          <a href={lastUrl} class="pagination__link">Last &raquo;</a>
+        </li>
+      </>
+    ) : (
+      <>
+        <li class="disabled"><span>Next &rsaquo;</span></li>
+        <li class="disabled"><span>Last &raquo;</span></li>
+      </>
+    )}
+  </ul>
+</nav>
+
+<style>
+  .pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 2rem;
+  }
+  .pagination__link {
+    padding: 0.5rem 0.75rem;
+    margin: 0 0.25rem;
+    border: 1px solid #ddd;
+    color: #007bff;
+    text-decoration: none;
+    border-radius: 0.25rem;
+  }
+  .pagination__link:hover {
+    background-color: #f8f9fa;
+  }
+  .pagination__link.active {
+    background-color: #007bff;
+    color: white;
+  }
+  .pagination__link.disabled {
+    color: #6c757d;
+    pointer-events: none;
+  }
+</style>

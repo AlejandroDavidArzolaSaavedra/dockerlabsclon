@@ -1,0 +1,37 @@
+---
+import rankingData from '../../public/ranking.json'
+
+const rankings = rankingData.data;
+
+// Obtener las primeras tres máquinas en función del ranking
+function getTopThreeMachines() {
+  return rankings.slice(0, 3)
+}
+let podium = [ 'Top 1', 'Top 2', 'Top 3'];
+let topThreeMachines = getTopThreeMachines();
+---
+<h2 class="text-2xl mt-8 font-semibold">Top 3 Mejores Hackers</h2>
+    <div class="podium mt-12 flex justify-center space-x-8 items-end">
+      {topThreeMachines.map((auth, index) => (
+        <a
+          href={auth.github}
+          target="_blank"
+          rel="noopener noreferrer"
+          class={`podium-item block relative text-center p-6 rounded-lg shadow-lg transition-transform duration-300 ${
+            index === 0
+              ? 'bg-gradient-to-r from-yellow-400 to-yellow-300 ml-8 order-2 transform scale-110'
+              : index === 1
+              ? 'bg-gradient-to-r from-orange-400 to-orange-300 order-1 transform scale-105'
+              : 'bg-gradient-to-r from-orange-300 to-yellow-200 order-3 transform scale-100'
+          }`}
+          style={`height: ${index === 0 ? '240px' : index === 1 ? '210px' : '180px'}`}
+        >
+        <div class="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-3 rounded-full shadow-md">
+          <i class={`fas ${index === 0 ? 'fa-trophy' : 'fa-medal'} text-4xl ${index === 0 ? 'text-yellow-500' : index === 1 ? 'text-gray-500' : 'text-orange-700'}`}></i>
+        </div>
+        <img src={auth.urlImg} alt={`${auth.author}'s avatar`} class="w-16 h-16 rounded-full mx-auto mt-1 mb-2 shadow-lg"/>
+        <h2 class="text-3xl font-extrabold mb-1 text-black tracking-wide">{podium[index]}</h2>
+        <p class="text-xl font-semibold text-gray-800">{auth.author}</p>
+        </a>
+      ))}
+    </div>

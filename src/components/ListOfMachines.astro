@@ -1,0 +1,87 @@
+---
+import { transformedMachineData, difficultyToText, filteredMachines } from './utils.ts';
+import imageData from '../../public/machinesImg.json';
+
+const machines = transformedMachineData.data;
+const images = imageData.machines;
+
+let filterName = '';
+let filterDifficulty = '';
+
+function handleNameFilterChange(event: { target: { value: string; }; }) {
+  filterName = event.target.value;
+}
+
+function handleDifficultyFilterChange(event: { target: { value: string; }; }) {
+  filterDifficulty = event.target.value;
+}
+
+const filtered = filteredMachines(machines, filterName, filterDifficulty, '');
+---
+
+
+<h1 class="text-3xl font-bold mb-8">Máquinas de DockerLabs</h1>
+<div class="mb-6 flex flex-col md:flex-row md:items-center space-y-4 md:space-y-0 md:space-x-4">
+  <input
+    type="text"
+    placeholder="Filter by name"
+    oninput={handleNameFilterChange}
+    class="filter-input w-full md:w-3/4 text-black px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+  />
+  <a href="https://dockerlabs.es/assets/instrucciones_de_uso.pdf" class="guide-button flex items-center px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
+    <span class="material-icons mr-2">help</span> Guía
+  </a>
+  <select onchange={handleDifficultyFilterChange} class="filter-select w-full md:w-auto text-black px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+    <option value="">All Difficulties</option>
+    <option value="0">Fácil</option>
+    <option value="1">Medio</option>
+    <option value="2">Difícil</option>
+    <option value="3">Super Difícil</option>
+  </select>
+</div>
+
+<ul class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3" id="machine-list">
+    {filtered.map((machine) => (
+      <li
+        id={machine._id}
+        class="p-6 bg-white text-black rounded-lg shadow-md hover:shadow-lg transition-shadow hover:scale-105 transition-all hover:shadow-2xl"
+      >
+        <a href={`${machine.name}`}>
+          <div class="w-full h-48 overflow-hidden">
+            <img src={images.find(img => img.name === machine.name)?.imageUrl || ''} alt={machine.name} class="object-cover w-full h-full" style={`view-transition-name: machine-${machine._id}`} />
+          </div>
+          <h2 class="text-2xl font-semibold mb-2">{machine.name}</h2>
+          <p class="text-gray-700 mb-1">
+            <strong>Size: </strong> {machine.size.value} {machine.size.unit}
+          </p>
+          <p class="text-gray-700 mb-4">
+            <strong>Difficulty: </strong> {difficultyToText(machine.difficulty)}
+          </p>
+        </a>
+        <a href={machine.downloadUrl} class="download-button">
+          <span class="material-icons mr-2">cloud_download</span> Descargar
+        </a>
+      </li>
+    ))}
+</ul>
+
+<style>
+  .download-button {
+    display: inline-flex;
+    align-items: center;
+    float: right;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 0.25rem;
+    background-color: #4285f4; /* Google blue */
+    color: white;
+    font-weight: bold;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+  }
+
+  .download-button:hover {
+    background-color: #3377e9; /* Darker blue on hover */
+  }
+</style>

@@ -1,0 +1,110 @@
+---
+import Footer from '../components/Footer.astro';
+import Nav from '../components/Nav.astro';
+import { ViewTransitions } from 'astro:transitions';
+
+interface Props {
+	title: string;
+}
+
+const { title } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="description" content="Astro description" />
+		<meta name="viewport" content="width=device-width" />
+		<link rel="icon" type="image/x-icon" href="../../public/favicon.ico" />
+		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+		<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+		<meta name="generator" content={Astro.generator} />
+		<meta name="view-transition" content="same-origin" />
+		<title>{title}</title>
+	</head>
+	<ViewTransitions />
+	<style>
+		body {
+			font-family: sans-serif;
+			color: white;
+			background-color: transparent; /* No background color here */
+			overflow: hidden; /* Hide overflow to prevent scroll bars */
+			margin: 0; /* Remove default margin */
+		}
+		.background-layer {
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			background-color: rgba(18, 19, 25, 0.911); /* Dark gray with opacity */
+			z-index: -1; /* Push the layer below other content */
+		}
+		.gif-background {
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			object-fit: cover; /* Ensure the GIF covers the entire screen */
+			z-index: -2; /* Push the GIF below the background layer */
+		}
+		.container {
+			display: flex;
+			flex-direction: column;
+			height: 100%;
+			overflow-y: auto; /* Allow vertical scrolling if content exceeds viewport */
+		}
+		.content {
+			flex: 1; /* Expand to fill remaining space */
+			position: relative; /* Ensure content stays above background */
+			z-index: 1; /* Place content above background layer */
+		}
+	</style>
+</head>
+<body class="font-sans text-white">
+	<div class="background-layer"></div>
+	<img src="../../public/background.gif" class="background-layer gif-background" />
+
+	<div class="h-screen overflow-hidden flex flex-col">
+		<Nav />
+		<div id="container" class="h-full flex-1 overflow-y-auto">
+			<div id="content">
+				<slot />
+			</div>
+			<Footer />
+		</div>
+	</div>
+	
+</body>
+</html>
+
+<script>
+
+	const checkViewTransition = () => {
+		return Boolean(document.startViewTransition);
+	}
+	if (checkViewTransition()) return
+
+	const fetchPage = async (url:any) => {
+		const response = await fetch(url)
+		const text = await response.text()
+		const [,data] = text.match(/<body[^>]*>([\s\S]*)<\/body>/i)
+		return data
+	}
+
+	window.navigation.addEventListener("navigate", (event) =>{
+		const toURL = new URL(event.destination.url)
+		if(location.origin != toURL.origin) return
+
+		event.intercept({async handler () {
+			const data = await fetchPage(toURL.pathname)
+
+			document.startViewTransition(() => {
+				document.documentElement.scrollTop = 0
+				document.body.innerHTML = data
+			});
+		}})
+	})
+</script>

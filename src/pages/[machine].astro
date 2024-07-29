@@ -1,0 +1,128 @@
+---
+import Layout from '../layouts/Layout.astro';
+import imageData from '../../public/machinesImg.json';
+import type { Machine, MachinesData } from '../components/Type.ts';
+import { Machines as MachineList } from "../../public/machines.js";
+
+import SuperMachine from '../../public/machines.json';
+
+const images = imageData.machines;
+const machinesInformation = SuperMachine.data;
+
+function getMachine(name: string) {
+  const image = machinesInformation.find((img: { name: string }) => img.name === name);
+  return image;
+}
+
+function getImageUrl(name: string) {
+  const image = images.find((img: { name: string }) => img.name === name);
+  return image ? image.imageUrl : '';
+}
+
+function getDescription(name: string) {
+  const description = images.find((img: { name: string }) => img.name === name);
+  return description ? description.description : '';
+}
+
+export const getStaticPaths = () => {
+  const paths = MachineList.data.map((machine) => ({
+    params: { machine: machine.name }
+  }));
+  return paths;
+};
+
+function difficultyToText(difficulty: number) {
+    switch (difficulty) {
+      case 0:
+        return 'Fácil';
+      case 1:
+        return 'Medio';
+      case 2:
+        return 'Difícil';
+      case 3:
+        return 'Super Difícil';
+      default:
+        return 'Desconocido';
+    }
+}
+
+const { machine } = Astro.params;
+
+const machineInfo = getMachine(machine);
+let value
+let unit
+let difficulty
+let id
+if (machineInfo && machineInfo.size) {
+    value = machineInfo.size.value;
+    unit = machineInfo.size.unit;
+    id = machineInfo._id
+    difficulty = difficultyToText(machineInfo.difficulty)
+}
+
+if (!machine) {
+  return Astro.redirect("/404?machines=${machine}");
+}
+---
+
+<Layout title="Detalles de la Máquina">
+    <div class = "py-6 sm:py-8 lg:py-12">
+      <div class = "mx-auto max-w-screen-xl px-4 md:px-8">
+        <div class = "grid gap-8 md:grid-cols-2 lg:gap-12">
+          <div>
+            <div class = "h-64 overflow-hidden rounded-lg bg-gray-100 shadow-lg md:h-auto">
+              <img
+                src={getImageUrl(machine)}
+                alt={machine}
+                class="h-full w-full object-cover object-center"
+                style={'view-transition-name: machine-${id}'}
+              />
+            </div>
+          </div>
+  
+          <div class="md:pt-8 bg-white p-8 rounded-md">
+  
+            <h1 class="mb-4 text-center text-2xl font-bold text-gray-800 sm:text-3xl md:mb-6 md:text-left">
+              Máquina {machine}
+            </h1>
+  
+            <p class="text-center mb-2 font-bold text-indigo-500 md:text-left">{getDescription(machine)}</p>
+  
+            <p class="mb-6 text-gray-500 sm:text-lg md:mb-8">
+              <strong>Tamaño:  {value} {unit}</strong> 
+            </p>
+  
+            <p class="mb-6 text-gray-500 sm:text-lg md:mb-8">
+              <strong>Dificultad: {difficulty}</strong>
+            </p>
+  
+            <a href="#" class="download-button">
+              <span class="material-icons mr-2">cloud_download</span> Descargar
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </Layout>;
+  
+  
+  <style>
+    .download-button {
+      display: inline-flex;
+      align-items: center;
+      float: right;
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 0.25rem;
+      background-color: #4285f4; /* Google blue */
+      color: white;
+      font-weight: bold;
+      text-decoration: none;
+      cursor: pointer;
+      transition: background-color 0.2s ease-in-out;
+    }
+  
+    .download-button:hover {
+      background-color: #3377e9; /* Darker blue on hover */
+    }
+  </style>

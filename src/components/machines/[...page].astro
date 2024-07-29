@@ -1,0 +1,49 @@
+---
+import type { Machine as MachineType, MachinesData } from '../../components/Type.ts';
+import machineData from '../../public/machines.json';
+import imageData from '../../public/machinesImg.json';
+
+import Pagination from '../components/Pagination.astro';
+
+const transformedMachineData: MachinesData = {
+  data: machineData.data.map((data: any) => ({
+    _id: data._id,
+    name: data.name,
+    size: data.size,
+    difficulty: data.difficulty,
+    downloadUrl: data.downloadUrl,
+    writeUps: data.writeUps,
+    status: data.status,
+    createdAt: data.createdAt,
+    updatedAt: data.updatedAt,
+    __v: data.__v,
+    owner: data.owner,
+  })),
+  msg: machineData.msg,
+};
+
+const machines: MachineType[] = transformedMachineData.data;
+
+export async function getStaticPaths({ paginate }) {
+  const formattedMachines = machines.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+  return paginate(formattedMachines, { pageSize: 5 });
+}
+
+const { page } = Astro.props;
+
+function difficultyToText(difficulty: number) {
+  switch (difficulty) {
+    case 0:
+      return 'Fácil';
+    case 1:
+      return 'Medio';
+    case 2:
+      return 'Difícil';
+    case 3:
+      return 'Super Difícil';
+    default:
+      return 'Desconocido';
+  }
+}
+const images = imageData.machines;
+---

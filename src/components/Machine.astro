@@ -1,0 +1,64 @@
+---
+import imageData from '../../public/machinesImg.json';
+
+const { id, name, difficulty, size, downloadUrl } = Astro.props;
+
+// Función para convertir el valor de dificultad a texto
+function difficultyToText(difficulty: number) {
+  switch (difficulty) {
+    case 0:
+      return 'Fácil';
+    case 1:
+      return 'Medio';
+    case 2:
+      return 'Difícil';
+    case 3:
+      return 'Super Difícil';
+    default:
+      return 'Desconocido';
+  }
+}
+
+// Función para obtener la URL de la imagen
+function getImageUrl(name: string) {
+  const image = imageData.machines.find((img: { name: string }) => img.name === name);
+  return image ? image.imageUrl : '';
+}
+---
+
+<a href={`/machines/${name}`}>
+  <div class="w-full h-48 overflow-hidden">
+    <img src={getImageUrl(name)} alt={name} class="object-cover w-full h-full" />
+  </div>
+  <h2 class="text-2xl font-semibold mb-2">{name}</h2>
+  <p class="text-gray-700 mb-1">
+    <strong>Size: </strong> {size.value} {size.unit}
+  </p>
+  <p class="text-gray-700 mb-4">
+    <strong>Difficulty: </strong> {difficultyToText(difficulty)}
+  </p>
+</a>
+<a href={downloadUrl} class="download-button">
+  <span class="material-icons mr-2">cloud_download</span> Descargar
+</a>
+
+<style>
+  .download-button {
+    display: inline-flex;
+    align-items: center;
+    float: right;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 0.25rem;
+    background-color: #4285f4; /* Google blue */
+    color: white;
+    font-weight: bold;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+  }
+
+  .download-button:hover {
+    background-color: #3377e9; /* Darker blue on hover */
+  }
+</style>

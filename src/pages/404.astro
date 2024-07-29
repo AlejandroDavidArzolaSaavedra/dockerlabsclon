@@ -1,0 +1,13 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+// Obtener el parámetro de la URL
+const { machine } = Astro.params;
+
+---
+
+<Layout title="404 Not Found">
+  <h1>404 - Página No Encontrada</h1>
+  <p>Lo sentimos, no pudimos encontrar la máquina con el ID: {machine}</p>
+  <p><a href="/">Volver a la página principal</a></p>
+</Layout>

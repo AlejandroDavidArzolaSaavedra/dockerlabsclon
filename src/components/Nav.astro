@@ -1,0 +1,80 @@
+<style>
+    /* Estilos para el modal */
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0,0,0,0.5);
+    }
+    
+    .modal-content {
+        background-color: #fefefe;
+        margin: 15% auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%;
+        max-width: 600px;
+        position: relative;
+    }
+    
+    .close {
+        color: #aaa;
+        position: absolute;
+        top: 10px;
+        right: 20px;
+        font-size: 28px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+    
+    .close:hover,
+    .close:focus {
+        color: black;
+        text-decoration: none;
+    }
+    
+    </style>    
+    
+    <nav class="nav sticky top-0 z-30 " style= "background-color: #121319;" >
+        <div class="container mx-auto flex flex-col md:flex-row items-center justify-between px-4 py-6">
+            <!-- Logo y enlace -->
+            <div class="flex items-center">
+                <a href="/" class="flex items-center">
+                    <img src="../../src/images/logo.png" class="mr-2 h-12 mt-1" alt="Logo">
+                    <span class="text-white text-xl font-bold">Docker</span>
+                    <span class="text-blue-500 text-xl font-bold mr-1">Labs</span>
+                    <span class="text-white text-xl font-bold">Clon</span>
+                </a>
+                <span id="ranking-link" class="hover:text-gray-300 flex items-center ml-8 mt-1">
+                    <img src="../../src/images/machine.png" class="mr-1 h-6" alt="machines">
+                    <span class="text-gray-300 hover:text-white">Ranking</span>
+                </span>
+            </div>
+        <!-- Font Awesome -->
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    
+        <!-- Botones enlaces a la derecha con iconos -->
+        <div class="flex items-center mt-4 md:mt-0">
+            <a href="https://www.youtube.com/@THackeo" class="text-gray-300 hover:text-white mr-4"><i class="fas fa-user-secret mr-1" style="color:#9fef00"></i> THackeo</a>
+            <a href="https://www.youtube.com/channel/UCGLfzfKRUsV6BzkrF1kJGsg" class="text-gray-300 hover:text-white"><i class="fas fa-user-secret mr-1" style="color:#9fef00"></i> El Pingüino de Mario</a>
+        </div>    
+    </nav>
+        
+    <!-- Modal -->
+    <div class="modal hidden fixed inset-0 z-50 overflow-auto bg-black bg-opacity-50 flex" id="myModal">
+        <div class="modal-content bg-white w-1/2 m-auto p-6 rounded-lg">
+            <button class="close absolute top-0 right-0 p-4" onclick="closeModal()">
+                <svg class="h-6 w-6 text-gray-500 hover:text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+            <h2 class="text-2xl text-black font-bold mb-4">Top Ranking</h2>
+            <div class="grid grid-cols-2 gap-4" id="userList"></div>
+        </div>
+    </div>
+    <script src="../../public/modal.js"></script>
