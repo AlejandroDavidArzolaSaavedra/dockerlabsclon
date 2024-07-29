@@ -1,3 +1,5 @@
 {
-  "firebase_hosting": {}
+  "firebase_hosting": {
+    "deploymentHostingUrl": "https://dockerlabsclon.web.app"
+  }
 }
