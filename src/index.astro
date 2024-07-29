@@ -1,0 +1,15 @@
+---
+import Layout from './layouts/Layout.astro';
+import Podium from './components/Podium.astro';
+import Video from './components/Video.astro';
+import ListOfMachines from './components/ListOfMachines.astro';
+import Search from './components/Search.astro';
+---
+<Layout title="DockerLabsClon">
+  <main class="m-auto max-w-6xl p-8 text-white rounded-lg shadow-lg">
+    <Search/>
+    <ListOfMachines/> 
+    <Podium/>
+    <Video/>
+  </main>
+</Layout>
